@@ -5,7 +5,7 @@ import Imageview from './Components/Imageview'
 
 export default function AppRouter() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
     <Switch>
       <Route exact path="/" component={App}  />
       <Route path="/image/:id" component={Imageview} />
