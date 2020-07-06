@@ -1,26 +1,51 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import '../src/App.css';
+import Imagesearch from './Components/Imagesearch';
+import Imagelist from './Components/Imagelist';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+
+const Api_key = "17299124-1ad73a45a9fe95766d7589051";
+
+
+export default class App extends Component {
+
+  state={
+    Images:[],
+    error: null
+  }
+ 
+  
+handelGetImg= async (e)=>{
+  e.preventDefault();
+  const searchTerm = e.target.elements.searchValue.value;
+  const Url = `https://pixabay.com/api/?key=${Api_key}&q=${searchTerm}&image_type=photo`;
+  const Request =await fetch(Url)
+  const Response =await Request.json();
+  if (!searchTerm) {
+    this.setState({ error: "Please provide a value." })
+  } else {
+    this.setState({ Images: Response.hits, error: null })
+  }
+  console.log(Response.hits);
 }
 
-export default App;
+
+// componentDidMount(){
+//   this.handelGetImg();
+// }
+  render() {
+    return (
+      <div style={{ color:"#fff", textAlign:"center" }}>
+     <Imagesearch handelGetImg={this.handelGetImg} />
+     { 
+          this.state.error !== null ? 
+          <div style={{ color:"#fff", textAlign:"center" }}>{ this.state.error }</div> : 
+          <Imagelist Images={this.state.Images} />
+        }
+      </div>
+    );
+  }
+}
+
